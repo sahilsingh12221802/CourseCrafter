@@ -1,35 +1,20 @@
-import { CoursePlayer } from "@/components/CoursePlayer/CoursePlayer";
-import { mockCourse } from "./lib/mockCourses";
-import { useState } from "react";
-import { TopicInput } from "./components/CourseGenerator/TopicInput";
-import CourseNavigation from "./components/CoursePlayer/CourseNavigation";
+// src/App.jsx
 
-function App() {
-  const [course, setCourse] = useState(null);
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import CoursePage from "./pages/CoursePage";
+import LoginPage from "./pages/LoginPage";
 
-  return (
-    <div className="container max-w-6xl mx-auto p-4">
-      {!course ? (
-        <TopicInput onGenerate={setCourse} />
-      ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          <div className="lg:col-span-1">
-            <CourseNavigation
-              modules={course.modules} 
-              currentModuleId={course.currentModuleId}
-            />
-          </div>
-          <div className="lg:col-span-3">
-            <CoursePlayer 
-              currentModule={course.modules.find(
-                m => m.id === course.currentModuleId
-              )} 
-            />
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
+const App = () => (
+  <Router>
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/course/:id" element={<CoursePage />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  </Router>
+);
 
 export default App;

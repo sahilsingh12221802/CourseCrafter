@@ -1,67 +1,93 @@
-// src/components/CoursePlayer/CoursePlayer.jsx
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import { VideoLesson } from "./VideoLesson";
-import { CodeEditor } from "./CodeEditor";
-import { Quiz } from "./Quiz";
-import { useState } from "react";
-import { ArrowLeft, ArrowRight, BookOpen, CheckCircle, ClipboardList, Code } from "lucide-react";
+import React, { useState } from "react";
+import PropTypes from "prop-types";
+import VideoLesson from "./VideoLesson";
+import CodeEditor from "./CodeEditor";
+import Quiz from "./Quiz";
+import ResourcePanel from "./ResourcePanel";
 import { Button } from "../ui/button";
 
-export function CoursePlayer({ currentModule }) {
-  const [activeTab, setActiveTab] = useState("lesson");
+const TABS = [
+  { key: "lesson", label: "Lesson" },
+  { key: "code", label: "Code" },
+  { key: "quiz", label: "Quiz" },
+  { key: "resources", label: "Resources" },
+];
+
+const CoursePlayer = ({ module }) => {
+  const [tab, setTab] = useState("lesson");
+  // Find first lesson of each type
+  const video = module.lessons.find(l => l.type === "video");
+  const code = module.lessons.find(l => l.type === "code");
+  const quiz = module.lessons.find(l => l.type === "quiz");
 
   return (
-    <div className="border rounded-lg overflow-hidden bg-white">
-      {/* Module Title */}
-      <div className="p-4 border-b">
-        <h3 className="font-bold text-lg">{currentModule.title}</h3>
-        <p className="text-sm text-gray-500">
-          {currentModule.duration} • {currentModule.type}
-        </p>
+    <div className="w-full max-w-3xl mx-auto my-4">
+      <div className="flex gap-2 mb-4">
+        {TABS.map(t => (
+          <Button
+            key={t.key}
+            variant={tab === t.key ? "default" : "outline"}
+            onClick={() => setTab(t.key)}
+            aria-pressed={tab === t.key}
+          >
+            {t.label}
+          </Button>
+        ))}
       </div>
-
-      {/* Interactive Content Tabs */}
-      <Tabs value={activeTab} className="min-h-[400px]">
-        <TabsList className="grid grid-cols-3 rounded-none">
-          <TabsTrigger value="lesson" className="py-3">
-            <BookOpen className="mr-2 h-4 w-4" /> Lesson
-          </TabsTrigger>
-          <TabsTrigger value="practice" className="py-3">
-            <Code className="mr-2 h-4 w-4" /> Practice
-          </TabsTrigger>
-          <TabsTrigger value="quiz" className="py-3">
-            <ClipboardList className="mr-2 h-4 w-4" /> Quiz
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="lesson" className="p-0">
-          <VideoLesson content={currentModule.videoContent} />
-        </TabsContent>
-        
-        <TabsContent value="practice" className="p-0">
-          <CodeEditor 
-            challenge={currentModule.codeChallenge}
-            language={currentModule.language}
+      <div>
+        {tab === "lesson" && video && (
+          <VideoLesson
+            videoUrl={video.videoUrl}
+            title={video.title}
+            description={video.description}
+            captionsUrl={video.captionsUrl}
           />
-        </TabsContent>
-        
-        <TabsContent value="quiz" className="p-0">
-          <Quiz questions={currentModule.quizQuestions} />
-        </TabsContent>
-      </Tabs>
-
-      {/* Navigation Footer */}
-      <div className="border-t p-4 bg-gray-50 flex justify-between">
-        <Button variant="outline" disabled={!currentModule.hasPrevious}>
-          <ArrowLeft className="mr-2 h-4 w-4" /> Previous
-        </Button>
-        <Button>
-          <CheckCircle className="mr-2 h-4 w-4" /> Mark Complete
-        </Button>
-        <Button variant="outline" disabled={!currentModule.hasNext}>
-          Next <ArrowRight className="ml-2 h-4 w-4" />
-        </Button>
+        )}
+        {tab === "code" && code && (
+          <CodeEditor
+            initialCode={code.initialCode}
+            language={code.language}
+            placeholder={code.placeholder}
+          />
+        )}
+        {tab === "quiz" && quiz && (
+          <Quiz
+            questions={[
+              {
+                prompt: quiz.prompt,
+                options: quiz.options,
+                answer: quiz.answer,
+              },
+            ]}
+            onComplete={() => {}}
+          />
+        )}
+        {tab === "resources" && (
+          <ResourcePanel resources={module.resources} />
+        )}
+        {/* Empty state if no content */}
+        {tab === "lesson" && !video && (
+          <div className="text-gray-500 text-center p-8">No video lesson available.</div>
+        )}
+        {tab === "code" && !code && (
+          <div className="text-gray-500 text-center p-8">No coding exercise available.</div>
+        )}
+        {tab === "quiz" && !quiz && (
+          <div className="text-gray-500 text-center p-8">No quiz available.</div>
+        )}
+        {tab === "resources" && (!module.resources || module.resources.length === 0) && (
+          <div className="text-gray-500 text-center p-8">No resources available.</div>
+        )}
       </div>
     </div>
   );
-}
+};
+
+CoursePlayer.propTypes = {
+  module: PropTypes.shape({
+    lessons: PropTypes.array.isRequired,
+    resources: PropTypes.array,
+  }).isRequired,
+};
+
+export default CoursePlayer;

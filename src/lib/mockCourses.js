@@ -1,46 +1,110 @@
 // src/lib/mockCourses.js
-export const mockCourse = {
-  id: "course_1",
-  title: "Complete C++ Course",
-  currentModuleId: "mod_1",
-  modules: [
-    {
-      id: "mod_1",
-      title: "C++ Fundamentals",
-      duration: "45 minutes",
-      type: "video",
-      videoContent: {
-        url: "https://example.com/cpp-intro", // Replace with real embed URL
-        description: "Introduction to C++ syntax and basic concepts"
+
+const mockCourses = [
+  {
+    id: "react-fundamentals",
+    title: "React Fundamentals",
+    description: "A beginner-friendly course on building user interfaces with React.",
+    progress: [
+      { label: "Introduction", value: 100 },
+      { label: "Components", value: 80 },
+      { label: "Hooks", value: 40 },
+    ],
+    modules: [
+      {
+        id: "intro",
+        title: "Introduction",
+        lessons: [
+          {
+            id: "video-1",
+            type: "video",
+            title: "Welcome to React",
+            description: "An overview of React and what you'll learn.",
+            videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+            captionsUrl: "",
+          },
+          {
+            id: "quiz-1",
+            type: "quiz",
+            prompt: "What is React?",
+            options: [
+              "A JavaScript library for building user interfaces",
+              "A CSS framework",
+              "A database",
+              "A server-side language"
+            ],
+            answer: 0,
+          },
+        ],
+        resources: [
+          {
+            title: "React Official Docs",
+            url: "https://react.dev/",
+            type: "link",
+            description: "The official React documentation.",
+          },
+        ],
       },
-      codeChallenge: {
-        title: "Hello World",
-        description: "Create your first C++ program",
-        starterCode: `#include <iostream>\n\nint main() {\n  // Your code here\n  return 0;\n}`,
-        solution: `#include <iostream>\n\nint main() {\n  std::cout << "Hello World!";\n  return 0;\n}`
+      {
+        id: "components",
+        title: "Components",
+        lessons: [
+          {
+            id: "video-2",
+            type: "video",
+            title: "Understanding Components",
+            description: "Learn about functional and class components.",
+            videoUrl: "https://www.w3schools.com/html/movie.mp4",
+            captionsUrl: "",
+          },
+          {
+            id: "code-1",
+            type: "code",
+            language: "JavaScript",
+            initialCode: `function Welcome() {\n  return <h1>Hello, World!</h1>;\n}`,
+            placeholder: "// Write a React component here",
+          },
+        ],
+        resources: [
+          {
+            title: "Component Cheatsheet",
+            url: "/files/react-components.pdf",
+            type: "pdf",
+            description: "Quick reference for React components.",
+          },
+        ],
       },
-      quizQuestions: [
-        {
-          question: "What is the correct way to print in C++?",
-          options: [
-            "print()",
-            "console.log()",
-            "std::cout",
-            "System.out.println()"
-          ],
-          answer: 2
-        }
-      ],
-      hasPrevious: false,
-      hasNext: true
-    },
-    {
-      id: "mod_2",
-      title: "Object-Oriented Programming",
-      duration: "1 hour",
-      type: "interactive",
-      hasPrevious: true,
-      hasNext: true
-    }
-  ]
-};
+      {
+        id: "hooks",
+        title: "Hooks",
+        lessons: [
+          {
+            id: "video-3",
+            type: "video",
+            title: "Introducing Hooks",
+            description: "What are hooks and why use them?",
+            videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+            captionsUrl: "",
+          },
+          {
+            id: "quiz-2",
+            type: "quiz",
+            prompt: "Which hook is used for state management?",
+            options: ["useState", "useEffect", "useContext", "useMemo"],
+            answer: 0,
+          },
+        ],
+        resources: [
+          {
+            title: "Hooks Reference",
+            url: "https://react.dev/reference/react/hooks",
+            type: "link",
+            description: "Official documentation for React hooks.",
+          },
+        ],
+      },
+    ],
+  },
+];
+
+export default mockCourses;
