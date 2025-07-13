@@ -1,49 +1,43 @@
-import { useState, useCallback } from "react";
-import { generateCourse } from "../api";
+// src/lib/hooks/useAIGenerator.js
+import { useState } from 'react';
+import { generateCourse } from '../api';
 
-export default function useAIGenerator() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [result, setResult] = useState(null);
-  const [step, setStep] = useState(0);
+/**
+ * useAIGenerator - Hook for AI course generation
+ * Handles loading states and errors during generation
+ */
+export const useAIGenerator = () => {
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [error, setError] = useState(null);
+  const [progress, setProgress] = useState(0);
 
-  const run = useCallback(async (params) => {
-    setLoading(true);
-    setError("");
-    setResult(null);
-    setStep(0);
+  const generate = async (formData) => {
+    setIsGenerating(true);
+    setError(null);
+    setProgress(0);
 
     try {
-      setStep(0);
-      await new Promise((r) => setTimeout(r, 700));
-      setStep(1);
-      await new Promise((r) => setTimeout(r, 700));
-      setStep(2);
-      await new Promise((r) => setTimeout(r, 700));
-      setStep(3);
+      // Simulate progress (in real app, this would come from API)
+      const interval = setInterval(() => {
+        setProgress(prev => {
+          if (prev >= 90) {
+            clearInterval(interval);
+            return prev;
+          }
+          return prev + 10;
+        });
+      }, 300);
 
-      const course = await generateCourse(params);
-      setResult(course);
-    } catch (e) {
-      setError("Failed to generate course.");
+      const course = await generateCourse(formData);
+      setProgress(100);
+      return course;
+    } catch (err) {
+      setError(err.message || 'Failed to generate course');
+      throw err;
     } finally {
-      setLoading(false);
+      setIsGenerating(false);
     }
-  }, []);
-
-  const reset = useCallback(() => {
-    setLoading(false);
-    setError("");
-    setResult(null);
-    setStep(0);
-  }, []);
-
-  return {
-    loading,
-    error,
-    result,
-    step,
-    run,
-    reset,
   };
-}
+
+  return { generate, isGenerating, progress, error };
+};

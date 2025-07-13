@@ -1,83 +1,23 @@
-import { GoogleGenAI } from "@google/genai";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
 
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
-if (!GEMINI_API_KEY) {
-  throw new Error("Gemini API key is missing. Set VITE_GEMINI_API_KEY in your environment.");
-}
-const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
-
-export async function generateCourse(params) {
-  const prompt = `
-    Create a personalized learning course as a JSON object.
-    Requirements:
-    - Topic: ${params.topic}
-    - Difficulty: ${params.difficulty}
-    - Time commitment: ${params.time}
-    Structure:
-    {
-      "id": "string",
-      "title": "string",
-      "description": "string",
-      "progress": [ { "label": "string", "value": number } ],
-      "modules": [
-        {
-          "id": "string",
-          "title": "string",
-          "lessons": [
-            {
-              "id": "string",
-              "type": "video|quiz|code",
-              "title": "string",
-              "description": "string",
-              "videoUrl"?: "string",
-              "captionsUrl"?: "string",
-              "prompt"?: "string",
-              "options"?: [ "string" ],
-              "answer"?: number,
-              "language"?: "string",
-              "initialCode"?: "string",
-              "placeholder"?: "string"
-            }
-          ],
-          "resources": [
-            {
-              "title": "string",
-              "url": "string",
-              "type": "pdf|link",
-              "description": "string"
-            }
-          ]
-        }
-      ]
-    }
-    Only output valid JSON.
-  `;
-
+export const login = async (email, password) => {
   try {
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: prompt,
+    const response = await fetch(`${API_BASE_URL}/auth/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
     });
 
-    let course;
-    try {
-      course = JSON.parse(response.text);
-    } catch (err) {
-      throw new Error("Failed to parse Gemini response as JSON.");
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || `Login failed with status: ${response.status}`);
     }
-    return course;
+
+    return await response.json();
   } catch (error) {
-    console.error("Error generating course:", error);
-    throw error;
+    console.error('API call failed:', error);
+    throw new Error(error.message || 'Network error. Please try again.');
   }
-}
-
-export async function updateProgress(courseId, progressData) {
-  await new Promise((resolve) => setTimeout(resolve, 800));
-  return true;
-}
-
-export async function fetchCourse(courseId) {
-  await new Promise((resolve) => setTimeout(resolve, 900));
-  return null;
-}
+};

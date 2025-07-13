@@ -1,110 +1,47 @@
-// src/lib/mockCourses.js
-
-const mockCourses = [
+export const mockCourses = [
   {
-    id: "react-fundamentals",
-    title: "React Fundamentals",
-    description: "A beginner-friendly course on building user interfaces with React.",
-    progress: [
-      { label: "Introduction", value: 100 },
-      { label: "Components", value: 80 },
-      { label: "Hooks", value: 40 },
-    ],
+    id: 'course-1',
+    title: 'Introduction to React',
+    description: 'Learn React fundamentals with hands-on projects',
+    difficulty: 'beginner',
+    estimatedWeeks: 4,
+    hoursPerWeek: 5,
+    recommendedPace: 75,
     modules: [
       {
-        id: "intro",
-        title: "Introduction",
+        id: 'module-1',
+        title: 'React Basics',
+        description: 'Core concepts of React',
+        duration: 3,
         lessons: [
           {
-            id: "video-1",
-            type: "video",
-            title: "Welcome to React",
-            description: "An overview of React and what you'll learn.",
-            videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
-            captionsUrl: "",
+            id: 'lesson-1',
+            title: 'What is React?',
+            type: 'video',
+            duration: 15,
+            completed: true
           },
           {
-            id: "quiz-1",
-            type: "quiz",
-            prompt: "What is React?",
-            options: [
-              "A JavaScript library for building user interfaces",
-              "A CSS framework",
-              "A database",
-              "A server-side language"
-            ],
-            answer: 0,
-          },
-        ],
-        resources: [
-          {
-            title: "React Official Docs",
-            url: "https://react.dev/",
-            type: "link",
-            description: "The official React documentation.",
-          },
-        ],
-      },
-      {
-        id: "components",
-        title: "Components",
-        lessons: [
-          {
-            id: "video-2",
-            type: "video",
-            title: "Understanding Components",
-            description: "Learn about functional and class components.",
-            videoUrl: "https://www.w3schools.com/html/movie.mp4",
-            captionsUrl: "",
-          },
-          {
-            id: "code-1",
-            type: "code",
-            language: "JavaScript",
-            initialCode: `function Welcome() {\n  return <h1>Hello, World!</h1>;\n}`,
-            placeholder: "// Write a React component here",
-          },
-        ],
-        resources: [
-          {
-            title: "Component Cheatsheet",
-            url: "/files/react-components.pdf",
-            type: "pdf",
-            description: "Quick reference for React components.",
-          },
-        ],
-      },
-      {
-        id: "hooks",
-        title: "Hooks",
-        lessons: [
-          {
-            id: "video-3",
-            type: "video",
-            title: "Introducing Hooks",
-            description: "What are hooks and why use them?",
-            videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
-            captionsUrl: "",
-          },
-          {
-            id: "quiz-2",
-            type: "quiz",
-            prompt: "Which hook is used for state management?",
-            options: ["useState", "useEffect", "useContext", "useMemo"],
-            answer: 0,
-          },
-        ],
-        resources: [
-          {
-            title: "Hooks Reference",
-            url: "https://react.dev/reference/react/hooks",
-            type: "link",
-            description: "Official documentation for React hooks.",
-          },
-        ],
-      },
-    ],
-  },
+            id: 'lesson-2',
+            title: 'Your First Component',
+            type: 'coding',
+            duration: 30,
+            completed: false
+          }
+        ]
+      }
+    ]
+  }
 ];
 
-export default mockCourses;
+// Mock user data
+export const mockUser = {
+  id: 'user-1',
+  name: 'John Doe',
+  email: 'john@example.com',
+  progress: {
+    completedCourses: 2,
+    ongoingCourses: 3,
+    totalMinutes: 1250
+  }
+};

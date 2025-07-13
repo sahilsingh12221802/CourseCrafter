@@ -1,50 +1,46 @@
-import React, { useState } from "react";
-import CourseNavigation from "../components/CoursePlayer/CourseNavigation";
-import CoursePlayer from "../components/CoursePlayer/CoursePlayer";
-import ProgressChart from "../components/CourseDashboard/ProgressChart";
-import AchievementBadge from "../components/CourseDashboard/AchievementBadge";
-import mockCourses from "../lib/mockCourses";
+import React from 'react';
+import { Outlet } from 'react-router-dom';
+import CourseNavigation from '../components/CoursePlayer/CourseNavigation';
+import { useCourseProgress } from '../lib/hooks/useCourseProgress';
 
-const CoursePage = () => {
-  const course = mockCourses[0]; 
-  const [activeModule, setActiveModule] = useState(0);
+/**
+ * CoursePage - Main layout for the learning environment
+ * Wraps all course player components
+ */
+export const CoursePage = () => {
+  const { currentCourse, isLoading, error } = useCourseProgress();
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-center p-6 max-w-md">
+          <h2 className="text-xl font-semibold mb-2">Course Loading Error</h2>
+          <p className="text-gray-600 dark:text-gray-300 mb-4">{error}</p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-primary text-white rounded-md"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-gray-50">
-      {/* Sidebar Navigation */}
-      <aside className="md:w-64 w-full border-r bg-white">
-        <CourseNavigation
-          modules={course.modules}
-          activeModule={activeModule}
-          onSelectModule={setActiveModule}
-        />
-        <div className="hidden md:block mt-8 px-4">
-          <ProgressChart progress={course.progress} />
-          <AchievementBadge
-            type="completion"
-            title="Module Complete"
-            description="You finished this module!"
-            date="July 12, 2025"
-          />
-        </div>
-      </aside>
-
-      {/* Main Content */}
-      <main className="flex-1 p-4 flex flex-col items-center">
-        <CoursePlayer
-          module={course.modules[activeModule]}
-        />
-        {/* For mobile, show progress and badge below */}
-        <div className="md:hidden w-full mt-8">
-          <ProgressChart progress={course.progress} />
-          <AchievementBadge
-            type="completion"
-            title="Module Complete"
-            description="You finished this module!"
-            date="July 12, 2025"
-          />
-        </div>
-      </main>
+    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
+      <CourseNavigation course={currentCourse} />
+      <div className="flex-1 overflow-hidden">
+        <Outlet />
+      </div>
     </div>
   );
 };
